@@ -1,0 +1,117 @@
+package com.suraksha;
+
+import java.util.*;
+
+class Quiz {
+    String title;
+    List<Question> questions;
+
+    public Quiz(String title) {
+        this.title = title;
+        this.questions = new ArrayList<>();
+    }
+
+    // Method to add a question
+    public void addQuestion(Question q) {
+        questions.add(q);
+    }
+}
+
+class Question {
+    String questionText;
+    List<String> options;
+    int correctAnswerIndex;
+
+    public Question(String questionText, List<String> options, int correctAnswerIndex) {
+        this.questionText = questionText;
+        this.options = options;
+        this.correctAnswerIndex = correctAnswerIndex;
+    }
+}
+
+class Quizapp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Predefined quizzes
+        List<Quiz> quizzes = createPredefinedQuizzes();
+
+        while (true) {
+            System.out.println("1. Take Quiz\n2. Exit");
+            int choice = sc.nextInt();
+            sc.nextLine();  // consume the newline
+
+            if (choice == 1) {
+                // Take a quiz
+                System.out.println("Available Quizzes:");
+                for (int i = 0; i < quizzes.size(); i++) {
+                    System.out.println((i + 1) + ". " + quizzes.get(i).title);
+                }
+
+                int quizNumber = -1;
+                while (quizNumber < 0 || quizNumber >= quizzes.size()) {
+                    System.out.println("Enter the number of the quiz you want to take: ");
+                    quizNumber = sc.nextInt() - 1;
+                    sc.nextLine();  // consume the newline
+                }
+
+                takeQuiz(quizzes.get(quizNumber));
+            } else if (choice == 2) {
+                System.out.println("Exiting...");
+                break;
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    // Method to take the quiz
+    public static void takeQuiz(Quiz quiz) {
+        int score = 0;
+        Scanner sc = new Scanner(System.in);
+
+        for (int i = 0; i < quiz.questions.size(); i++) {
+            Question q = quiz.questions.get(i);
+            System.out.println("Q" + (i + 1) + ": " + q.questionText);
+            for (int j = 0; j < q.options.size(); j++) {
+                System.out.println((j + 1) + ". " + q.options.get(j));
+            }
+
+            int answer = -1;
+            while (answer < 0 || answer >= 4) {
+                System.out.println("Enter your answer (1-4): ");
+                answer = sc.nextInt() - 1;
+            }
+
+            if (answer == q.correctAnswerIndex) {
+                System.out.println("Correct!\n");
+                score++;
+            } else {
+                System.out.println("Wrong! The correct answer was: " + (q.correctAnswerIndex + 1) + ". " + q.options.get(q.correctAnswerIndex) + "\n");
+            }
+        }
+
+        System.out.println("Quiz completed! Your score: " + score + "/" + quiz.questions.size());
+        System.out.println("Thank you for taking the quiz!\n");
+    }
+
+    // Method to create predefined quizzes
+    public static List<Quiz> createPredefinedQuizzes() {
+        List<Quiz> quizzes = new ArrayList<>();
+
+        // Quiz 1
+        Quiz quiz1 = new Quiz("General Knowledge on Java");
+        quiz1.addQuestion(new Question("What is Java?", Arrays.asList("An operating System", "A programming language", "A web browser", "A text editor"), 1));
+        quiz1.addQuestion(new Question("What is the extension of Java bytecode files?", Arrays.asList(".js", ".java", ".exe", ".class"), 3));
+        quizzes.add(quiz1);
+
+        // Quiz 2
+        Quiz quiz2 = new Quiz("Simple questions on Java");
+        quiz2.addQuestion(new Question("Who invented the Java programming language?", Arrays.asList("Dennis Ritchie", "Bjarne Stroustrup", "James Gosling", "Guido van Rossum"), 2));
+        quiz2.addQuestion(new Question("Which of these is a valid keyword in Java?", Arrays.asList("interface", "string", "Float", "Unsigned"), 0));
+        quizzes.add(quiz2);
+
+        // Add more quizzes as needed
+        return quizzes;
+    }
+}
